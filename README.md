@@ -1,4 +1,4 @@
-# Museum Exploration Platform
+# The Halden Museum — Museum Visitor Experience Platform
 
 Academic web project for **CSE326 Internet Programming** (Lovely Professional University, Semester 1) by **Nazmul, Bilal, and Bhoomika**.
 
@@ -15,17 +15,19 @@ No installation, backend server, database, or build step is required.
 
 ## File Structure
 
-- `index.html` — Home page with museum introduction, 3-step guide, and featured exhibits.
+- `index.html` — Home page with museum introduction, 3-step guide, and 3 featured exhibits.
 - `explore.html` — Full 16-exhibit catalogue with category filter buttons.
 - `exhibit.html` — Single exhibit detail page reading `?id=` from the URL.
 - `discover.html` — Interest chip selector and rule-based ranked recommendations.
 - `visit.html` — "My Visit" itinerary showing the ordered gallery route, total time, Remove buttons, and Clear all.
-- `css/style.css` — Stylesheet containing CSS variables, responsive layouts, and museum typography/palette tokens.
-- `js/data.js` — Fixed array (`exhibits`) of 16 exhibit objects replacing a backend database.
-- `js/storage.js` — `APPROVED_INTERESTS` list plus `localStorage` helpers for `"favourites"` and `"interests"`.
-- `js/script.js` — Page rendering, event listeners, recommendation scoring, and route sorting logic.
-- `images/` — Folder containing exhibit photos, the Home hero photo, and the custom SVG logo emblem.
+- `style.css` — Single stylesheet containing CSS variables, responsive layouts, and museum typography/palette tokens.
+- `data.js` — Fixed array (`exhibits`) of 16 exhibit objects replacing a backend database.
+- `storage.js` — `APPROVED_INTERESTS` list plus `localStorage` helpers for `"favourites"` and `"interests"`.
+- `script.js` — Page rendering, event listeners, recommendation scoring, and route sorting logic.
+- `images/` — Folder reserved for exhibit photos and the Home hero photo.
 - `PRD.md` — Product Requirements Document (single source of truth for scope and rules).
+- `AGENTS.md` — Engineering rules and academic/viva guidelines.
+- `ANTIGRAVITY_BUILD_PLAYBOOK.md` — Phase-by-phase build playbook.
 - `README.md` — Project overview, architecture guide, and viva summary.
 
 ## How Core Features Work
@@ -39,7 +41,7 @@ No installation, backend server, database, or build step is required.
 
 ## Design Notes
 
-The final design of Museum Exploration Platform introduces several polished interactive features built strictly in vanilla JavaScript and CSS variables:
+The final design of The Halden Museum introduces several polished interactive features built strictly in vanilla JavaScript and CSS variables:
 
 1. **Theme System (`style.css`, `storage.js`):** Light and dark palettes are defined using CSS variables in `:root` and overridden inside `[data-theme="dark"]`. The site sets `document.documentElement.setAttribute('data-theme', theme)` and stores the choice under the `"theme"` key in `localStorage` so the visitor's preference persists across pages and reloads. An anti-flash inline script in the `<head>` of every HTML page applies the saved theme before the body renders to prevent white screen flashes.
 2. **Dark Mode Toggle (`script.js`):** A text-only button in the header reads `DARK` in the light theme and `LIGHT` in the dark theme with no decorative icons. Clicking it toggles `data-theme` between `"light"` and `"dark"`, updates `aria-pressed`, and saves to `localStorage`.
