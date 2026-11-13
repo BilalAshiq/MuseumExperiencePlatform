@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Museum Exploration Platform — Art, Archaeology and Natural History</title>
+  <link rel="icon" type="image/svg+xml" href="images/logo.svg">
+  <!-- Anti-flash: set theme before rendering -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = saved || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/data.js" defer></script>
+  <script src="js/storage.js" defer></script>
+  <script src="js/script.js" defer></script>
+</head>
+<body>
+  <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+  <header class="site-header site-header--home">
+    <div class="container header-inner">
+      <a href="index.html" class="site-brand" aria-current="page">
+        <span class="site-logo" aria-hidden="true">
+          <svg class="site-logo-icon" width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 3L3 9V11H29V9L16 3Z" fill="currentColor"/>
+            <rect x="4" y="12" width="24" height="1.5" fill="currentColor" opacity="0.85"/>
+            <rect x="5.5" y="14.5" width="2.5" height="11" rx="0.5" fill="currentColor"/>
+            <rect x="11" y="14.5" width="2" height="11" rx="0.5" fill="currentColor"/>
+            <rect x="19" y="14.5" width="2" height="11" rx="0.5" fill="currentColor"/>
+            <rect x="24" y="14.5" width="2.5" height="11" rx="0.5" fill="currentColor"/>
+            <path d="M13 25.5V18.5C13 16.843 14.343 15.5 16 15.5C17.657 15.5 19 16.843 19 18.5V25.5H13Z" stroke="currentColor" stroke-width="1.3" fill="none"/>
+            <rect x="3.5" y="26.5" width="25" height="1.5" fill="currentColor"/>
+            <rect x="2" y="28.5" width="28" height="2" rx="0.5" fill="currentColor"/>
+          </svg>
+        </span>
+        <span class="site-brand-text">
+          <span class="site-title">Museum Exploration Platform</span>
+          <span class="site-subtitle">Art, Archaeology and Natural History</span>
+        </span>
+      </a>
+
+      <div class="header-controls">
+        <button type="button" class="theme-toggle" id="theme-toggle" role="switch" aria-checked="false" aria-label="Dark mode">
+          <span class="sr-only">Dark mode</span>
+          <span class="switch-track" aria-hidden="true">
+            <svg class="switch-icon switch-icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="switch-icon switch-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <span class="switch-knob"></span>
+          </span>
+        </button>
+        <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="site-nav">
+          Menu
+        </button>
+      </div>
+
+      <nav class="site-nav" id="site-nav" aria-label="Main navigation">
+        <ul class="nav-list">
+          <li><a href="explore.html" class="nav-link">Explore</a></li>
+          <li><a href="discover.html" class="nav-link">Discover</a></li>
+          <li><a href="visit.html" class="nav-link">My Visit (<span id="nav-visit-count">0</span>)</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Section 1: Full-width Photography Hero -->
+    <section class="hero-full" aria-labelledby="hero-heading">
+      <img src="images/hero-gallery.jpg" alt="Symmetrical museum gallery with a dark gallery bench, central marble bust on a stone pedestal, skylight ceiling, wall tapestries and paintings, and glass display cases holding a fossil and crystal specimen" class="hero-full-bg">
+      <div class="hero-full-scrim" aria-hidden="true"></div>
+      <div class="container hero-full-container">
+        <div class="hero-content">
+          <p class="label hero-eyebrow">Museum Exploration Platform</p>
+          <h1 id="hero-heading" class="display-title">
+            <span class="hero-title-line">Choose what to see</span>
+            <span class="hero-title-line hero-accent">in the time you have.</span>
+          </h1>
+          <p class="hero-lead">
+            Four galleries of art, archaeology, and natural history. Select your interests to find relevant exhibits and build an ordered route.
+          </p>
+          <div class="hero-actions">
+            <a href="discover.html" class="btn btn-hero-primary">
+              <span>Plan your visit</span>
+              <span class="hero-btn-arrow" aria-hidden="true">&rarr;</span>
+            </a>
+            <a href="explore.html" class="btn btn-hero-secondary">
+              <span>Browse the collection</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Site Guide -->
+    <section class="home-section section-bg-base guide-section" aria-labelledby="guide-heading">
+      <div class="container">
+        <div class="guide-header reveal">
+          <div class="eyebrow-row">
+            <span class="eyebrow-dash" aria-hidden="true"></span>
+            <p class="label guide-eyebrow">How it works</p>
+          </div>
+          <h2 id="guide-heading" class="guide-heading">Plan your visit in three steps</h2>
+          <p class="guide-subtitle">A simple way to explore, save and experience the collection at your own pace.</p>
+        </div>
+
+        <div class="guide-stepper-container reveal">
+          <div class="guide-grid">
+            <!-- Step 1 -->
+            <div class="guide-card">
+              <div class="guide-node" aria-hidden="true">
+                <svg class="guide-node-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                  <polyline points="2 17 12 22 22 17"></polyline>
+                  <polyline points="2 12 12 17 22 12"></polyline>
+                </svg>
+              </div>
+              <span class="guide-num">01</span>
+              <h3 class="guide-title">Choose your interest</h3>
+              <p class="guide-desc">Pick the subjects and periods that intrigue you to get ranked recommendations.</p>
+              <a href="discover.html" class="btn-guide-action">
+                <span>Explore recommendations</span>
+                <span class="btn-arrow" aria-hidden="true">&rarr;</span>
+              </a>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="guide-card">
+              <div class="guide-node" aria-hidden="true">
+                <svg class="guide-node-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                </svg>
+              </div>
+              <span class="guide-num">02</span>
+              <h3 class="guide-title">Save what you like</h3>
+              <p class="guide-desc">Browse the collection catalogue and save individual exhibits directly as you explore.</p>
+              <a href="explore.html" class="btn-guide-action">
+                <span>Browse collection</span>
+                <span class="btn-arrow" aria-hidden="true">&rarr;</span>
+              </a>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="guide-card">
+              <div class="guide-node" aria-hidden="true">
+                <svg class="guide-node-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </div>
+              <span class="guide-num">03</span>
+              <h3 class="guide-title">Follow your route</h3>
+              <p class="guide-desc">Get an ordered walking route grouped by gallery with an estimated total visit time.</p>
+              <a href="visit.html" class="btn-guide-action">
+                <span>View your visit</span>
+                <span class="btn-arrow" aria-hidden="true">&rarr;</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Featured Exhibit Highlight -->
+    <section class="home-section section-bg-surface" aria-labelledby="featured-heading">
+      <div class="container">
+        <div class="featured-header reveal">
+          <p class="label">Collection Highlight</p>
+          <h2 id="featured-heading" class="visually-hidden">Featured Exhibit</h2>
+        </div>
+
+        <div id="home-featured" class="featured-block reveal"></div>
+      </div>
+    </section>
+
+    <!-- Section 4: The Galleries -->
+    <section class="home-section section-bg-base galleries-section" aria-labelledby="galleries-heading">
+      <div class="container">
+        <div class="galleries-header-row reveal">
+          <div class="galleries-header-text">
+            <div class="eyebrow-row">
+              <span class="eyebrow-dash" aria-hidden="true"></span>
+              <p class="label galleries-eyebrow">The galleries</p>
+            </div>
+            <h2 id="galleries-heading" class="galleries-heading">Four rooms, one route</h2>
+            <p class="galleries-subtitle">A curated journey through our collection, from ancient worlds to modern art.</p>
+          </div>
+          <a href="explore.html" class="btn-galleries-all">
+            <span>View all galleries</span>
+            <span class="btn-arrow" aria-hidden="true">&rarr;</span>
+          </a>
+        </div>
+
+        <div id="home-galleries" class="galleries-grid reveal"></div>
+
+        <div class="galleries-pagination-bar reveal" aria-hidden="true">
+          <span class="gallery-bar is-active"></span>
+          <span class="gallery-bar"></span>
+          <span class="gallery-bar"></span>
+          <span class="gallery-bar"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Interests -->
+    <section class="home-section section-bg-surface interests-section" aria-labelledby="interests-heading">
+      <div class="container">
+        <div class="interests-header-row reveal">
+          <div class="interests-header-text">
+            <div class="eyebrow-row">
+              <span class="eyebrow-dash" aria-hidden="true"></span>
+              <p class="label interests-eyebrow">Follow your curiosity</p>
+            </div>
+            <h2 id="interests-heading" class="interests-heading">Eight ways in</h2>
+            <p class="interests-subtitle">Explore our collection through eight distinct subjects, from ancient worlds to modern art.</p>
+          </div>
+          <a href="discover.html" class="btn-interests-all">
+            <span>Explore by interest</span>
+            <span class="btn-arrow" aria-hidden="true">&rarr;</span>
+          </a>
+        </div>
+
+        <div id="home-interests" class="interests-grid reveal"></div>
+      </div>
+    </section>
+
+    <!-- Section 6: Stats Band -->
+    <section class="stats-section" aria-labelledby="stats-heading">
+      <div class="container">
+        <h2 id="stats-heading" class="visually-hidden">Museum by the Numbers</h2>
+        <div id="home-stats" class="stats-grid reveal"></div>
+      </div>
+    </section>
+
+    <!-- Section 7: Closing Call to Action -->
+    <section class="home-section closing-cta-section section-bg-base" aria-labelledby="cta-heading">
+      <div class="container">
+        <div class="closing-cta reveal">
+          <h2 id="cta-heading" class="closing-cta-title">Begin with the exhibits that speak to you.</h2>
+          <a href="discover.html" class="btn btn-primary">Build your visit route</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="footer-brand-wrap">
+            <span class="site-logo footer-logo" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 3L3 9V11H29V9L16 3Z" fill="currentColor"/>
+                <rect x="4" y="12" width="24" height="1.5" fill="currentColor" opacity="0.85"/>
+                <rect x="5.5" y="14.5" width="2.5" height="11" rx="0.5" fill="currentColor"/>
+                <rect x="11" y="14.5" width="2" height="11" rx="0.5" fill="currentColor"/>
+                <rect x="19" y="14.5" width="2" height="11" rx="0.5" fill="currentColor"/>
+                <rect x="24" y="14.5" width="2.5" height="11" rx="0.5" fill="currentColor"/>
+                <path d="M13 25.5V18.5C13 16.843 14.343 15.5 16 15.5C17.657 15.5 19 16.843 19 18.5V25.5H13Z" stroke="currentColor" stroke-width="1.3" fill="none"/>
+                <rect x="3.5" y="26.5" width="25" height="1.5" fill="currentColor"/>
+                <rect x="2" y="28.5" width="28" height="2" rx="0.5" fill="currentColor"/>
+              </svg>
+            </span>
+            <p class="footer-brand">Museum Exploration Platform</p>
+          </div>
+          <p class="footer-subtitle">Art, Archaeology and Natural History</p>
+        </div>
+
+        <nav class="footer-col" aria-label="Footer navigation">
+          <ul class="footer-links">
+            <li><a href="explore.html">Explore</a></li>
+            <li><a href="discover.html">Discover</a></li>
+            <li><a href="visit.html">My Visit</a></li>
+          </ul>
+        </nav>
+
+        <div class="footer-col footer-meta">
+          <p>Museum Exploration Platform — CSE326 Academic Project (Nazmul, Bilal, Bhoomika).</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <button type="button" class="back-to-top" id="back-to-top" aria-label="Back to top">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="square"/>
+    </svg>
+  </button>
+</body>
+</html>
+

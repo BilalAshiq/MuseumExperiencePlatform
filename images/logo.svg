@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Museum Exploration Platform Emblem -->
+  <!-- Classical Pediment & Entablature -->
+  <path d="M16 3L3 9V11H29V9L16 3Z" fill="#D9A155"/>
+  <rect x="4" y="12" width="24" height="1.5" fill="#D9A155" opacity="0.85"/>
+  <!-- 4 Architectural Fluted Columns -->
+  <rect x="5.5" y="14.5" width="2.5" height="11" rx="0.5" fill="#D9A155"/>
+  <rect x="11" y="14.5" width="2" height="11" rx="0.5" fill="#D9A155"/>
+  <rect x="19" y="14.5" width="2" height="11" rx="0.5" fill="#D9A155"/>
+  <rect x="24" y="14.5" width="2.5" height="11" rx="0.5" fill="#D9A155"/>
+  <!-- Central Gateway / Portal Arch -->
+  <path d="M13 25.5V18.5C13 16.843 14.343 15.5 16 15.5C17.657 15.5 19 16.843 19 18.5V25.5H13Z" stroke="#D9A155" stroke-width="1.3" fill="none"/>
+  <!-- Stepped Stylobate Foundation -->
+  <rect x="3.5" y="26.5" width="25" height="1.5" fill="#D9A155"/>
+  <rect x="2" y="28.5" width="28" height="2" rx="0.5" fill="#D9A155"/>
+</svg>
+

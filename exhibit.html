@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exhibit Details — Museum Exploration Platform</title>
+  <link rel="icon" type="image/svg+xml" href="images/logo.svg">
+  <!-- Anti-flash: set theme before rendering -->
+  <script>
+    (function () {
+      try {
+        var saved = localStorage.getItem('theme');
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = saved || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/data.js" defer></script>
+  <script src="js/storage.js" defer></script>
+  <script src="js/script.js" defer></script>
+</head>
+<body>
+  <div class="scroll-progress" id="scroll-progress" aria-hidden="true"></div>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="site-brand">
+        <span class="site-logo" aria-hidden="true">
+          <svg class="site-logo-icon" width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M16 3L3 9V11H29V9L16 3Z" fill="currentColor"/>
+            <rect x="4" y="12" width="24" height="1.5" fill="currentColor" opacity="0.85"/>
+            <rect x="5.5" y="14.5" width="2.5" height="11" rx="0.5" fill="currentColor"/>
+            <rect x="11" y="14.5" width="2" height="11" rx="0.5" fill="currentColor"/>
+            <rect x="19" y="14.5" width="2" height="11" rx="0.5" fill="currentColor"/>
+            <rect x="24" y="14.5" width="2.5" height="11" rx="0.5" fill="currentColor"/>
+            <path d="M13 25.5V18.5C13 16.843 14.343 15.5 16 15.5C17.657 15.5 19 16.843 19 18.5V25.5H13Z" stroke="currentColor" stroke-width="1.3" fill="none"/>
+            <rect x="3.5" y="26.5" width="25" height="1.5" fill="currentColor"/>
+            <rect x="2" y="28.5" width="28" height="2" rx="0.5" fill="currentColor"/>
+          </svg>
+        </span>
+        <span class="site-brand-text">
+          <span class="site-title">Museum Exploration Platform</span>
+          <span class="site-subtitle">Art, Archaeology and Natural History</span>
+        </span>
+      </a>
+
+      <div class="header-controls">
+        <button type="button" class="theme-toggle" id="theme-toggle" role="switch" aria-checked="false" aria-label="Dark mode">
+          <span class="sr-only">Dark mode</span>
+          <span class="switch-track" aria-hidden="true">
+            <svg class="switch-icon switch-icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="switch-icon switch-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+            <span class="switch-knob"></span>
+          </span>
+        </button>
+        <button type="button" class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="site-nav">
+          Menu
+        </button>
+      </div>
+
+      <nav class="site-nav" id="site-nav" aria-label="Main navigation">
+        <ul class="nav-list">
+          <li><a href="explore.html" class="nav-link">Explore</a></li>
+          <li><a href="discover.html" class="nav-link">Discover</a></li>
+          <li><a href="visit.html" class="nav-link">My Visit (<span id="nav-visit-count">0</span>)</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-section" aria-label="Exhibit details">
+      <div class="container">
+        <div class="detail-back-bar reveal">
+          <a href="explore.html" class="text-link back-link">
+            <span class="link-arrow" aria-hidden="true">&larr;</span>
+            <span>Back to Explore</span>
+          </a>
+        </div>
+
+        <article class="exhibit-detail reveal" id="exhibit-detail"></article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div class="footer-brand-wrap">
+            <span class="site-logo footer-logo" aria-hidden="true">
+              <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16 3L3 9V11H29V9L16 3Z" fill="currentColor"/>
+                <rect x="4" y="12" width="24" height="1.5" fill="currentColor" opacity="0.85"/>
+                <rect x="5.5" y="14.5" width="2.5" height="11" rx="0.5" fill="currentColor"/>
+                <rect x="11" y="14.5" width="2" height="11" rx="0.5" fill="currentColor"/>
+                <rect x="19" y="14.5" width="2" height="11" rx="0.5" fill="currentColor"/>
+                <rect x="24" y="14.5" width="2.5" height="11" rx="0.5" fill="currentColor"/>
+                <path d="M13 25.5V18.5C13 16.843 14.343 15.5 16 15.5C17.657 15.5 19 16.843 19 18.5V25.5H13Z" stroke="currentColor" stroke-width="1.3" fill="none"/>
+                <rect x="3.5" y="26.5" width="25" height="1.5" fill="currentColor"/>
+                <rect x="2" y="28.5" width="28" height="2" rx="0.5" fill="currentColor"/>
+              </svg>
+            </span>
+            <p class="footer-brand">Museum Exploration Platform</p>
+          </div>
+          <p class="footer-subtitle">Art, Archaeology and Natural History</p>
+        </div>
+
+        <nav class="footer-col" aria-label="Footer navigation">
+          <ul class="footer-links">
+            <li><a href="explore.html">Explore</a></li>
+            <li><a href="discover.html">Discover</a></li>
+            <li><a href="visit.html">My Visit</a></li>
+          </ul>
+        </nav>
+
+        <div class="footer-col footer-meta">
+          <p>Museum Exploration Platform — CSE326 Academic Project (Nazmul, Bilal, Bhoomika).</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <button type="button" class="back-to-top" id="back-to-top" aria-label="Back to top">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+      <path d="M7 12V2M7 2L2 7M7 2L12 7" stroke="currentColor" stroke-width="1.75" stroke-linecap="square"/>
+    </svg>
+  </button>
+</body>
+</html>
+
