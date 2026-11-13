@@ -2047,6 +2047,14 @@ html.js-hero-stagger .hero-content.is-lifted .hero-actions {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.5rem;
+  min-width: 0;
+  width: 100%;
+}
+
+html.js-reveal .card-grid,
+html.js-reveal .card-grid.reveal {
+  opacity: 1 !important;
+  transform: none !important;
 }
 
 @media (min-width: 600px) {
@@ -2068,6 +2076,7 @@ html.js-hero-stagger .hero-content.is-lifted .hero-actions {
   display: flex;
   flex-direction: column;
   height: 100%;
+  min-width: 0;
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 12px;

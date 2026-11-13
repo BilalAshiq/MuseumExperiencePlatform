@@ -232,13 +232,13 @@ function setupScrollReveal() {
   const observer = new IntersectionObserver(
     function (entries, obs) {
       entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
+        if (entry.isIntersecting || entry.intersectionRatio > 0) {
           entry.target.classList.add("is-revealed");
           obs.unobserve(entry.target);
         }
       });
     },
-    { threshold: 0.15 }
+    { threshold: 0 }
   );
 
   reveals.forEach(function (el) {
