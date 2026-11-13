@@ -17,6 +17,17 @@ function setupMobileNav() {
     return;
   }
 
+  function closeNav() {
+    if (nav.classList.contains("is-open")) {
+      nav.classList.remove("is-open");
+      toggleBtn.setAttribute("aria-expanded", "false");
+      toggleBtn.textContent = "Menu";
+      if (header) {
+        header.classList.remove("has-nav-open");
+      }
+    }
+  }
+
   toggleBtn.addEventListener("click", function () {
     const isOpen = nav.classList.toggle("is-open");
     toggleBtn.setAttribute("aria-expanded", String(isOpen));
@@ -28,6 +39,21 @@ function setupMobileNav() {
       } else {
         header.classList.remove("has-nav-open");
       }
+    }
+  });
+
+  // Close when pressing Escape key
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && nav.classList.contains("is-open")) {
+      closeNav();
+      toggleBtn.focus();
+    }
+  });
+
+  // Close when viewport expands to desktop breakpoint
+  window.addEventListener("resize", function () {
+    if (window.innerWidth >= 600 && nav.classList.contains("is-open")) {
+      closeNav();
     }
   });
 }

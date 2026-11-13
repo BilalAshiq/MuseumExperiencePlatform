@@ -617,14 +617,45 @@ button:focus-visible {
 }
 
 .site-nav {
-  display: none;
+  display: grid;
+  grid-template-rows: 0fr;
   width: 100%;
-  border-top: 1px solid var(--color-border);
-  padding-top: var(--space-xs);
+  border-top: 1px solid transparent;
+  padding-top: 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  overflow: hidden;
+  transition: grid-template-rows 0.32s cubic-bezier(0.25, 1, 0.5, 1),
+              opacity 0.24s ease,
+              padding-top 0.32s cubic-bezier(0.25, 1, 0.5, 1),
+              border-color 0.32s ease,
+              visibility 0s linear 0.32s;
 }
 
 .site-nav.is-open {
-  display: block;
+  grid-template-rows: 1fr;
+  border-top-color: var(--color-border);
+  padding-top: var(--space-xs);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: grid-template-rows 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+              opacity 0.3s ease,
+              padding-top 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+              border-color 0.35s ease,
+              visibility 0s linear 0s;
+}
+
+.site-nav > .nav-list {
+  min-height: 0;
+  overflow: hidden;
+  transform: translateY(-8px);
+  transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.site-nav.is-open > .nav-list {
+  transform: translateY(0);
 }
 
 .nav-list {
@@ -3522,13 +3553,28 @@ html.js-reveal .card-grid.reveal {
     display: none;
   }
 
-  .site-nav {
+  .site-nav,
+  .site-nav.is-open {
     display: block;
+    grid-template-rows: none;
     width: auto;
     border-top: none;
     padding-top: 0;
     order: 2;
     margin-left: auto;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    overflow: visible;
+    transition: none;
+  }
+
+  .site-nav > .nav-list,
+  .site-nav.is-open > .nav-list {
+    min-height: auto;
+    overflow: visible;
+    transform: none;
+    transition: none;
   }
 
   .header-controls {
