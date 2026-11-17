@@ -4,7 +4,7 @@ Academic web project for **CSE326 Internet Programming** (Lovely Professional Un
 
 ## Purpose
 
-Visitors in a large museum often cannot see everything in one trip. This frontend-only website lets a visitor pick subjects they care about, see ranked exhibit recommendations, save favourites across pages, and view an ordered walking route through the museum's four galleries with an estimated total visit time.
+Visitors in a large museum often cannot see everything in one trip. This frontend-only website lets visitors browse and filter the exhibit catalogue, get ranked recommendations based on their interests, save favorites across pages, and plan an ordered walking route through the museum's four galleries with an estimated total visit time.
 
 ## How to Run
 
@@ -25,10 +25,7 @@ No installation, backend server, database, or build step is required.
 - `js/storage.js` — Approved interests and `localStorage` helpers for Favorites, My Visit and interests.
 - `js/script.js` — Shared page rendering, event listeners, recommendation ranking and route sorting.
 - `images/` — Exhibit photography and the Home hero image.
-- `imp/PRD.md` — Product Requirements Document.
-- `imp/AGENTS.md` — Engineering rules and academic/viva guidelines.
-- `imp/ANTIGRAVITY_BUILD_PLAYBOOK.md` — Phase-by-phase build playbook.
-- `imp/Elite Design Upgrade Complete Prompt Playbook.md` — Design implementation notes.
+- `imp/` — Imported project guidance. Some documents describe an earlier site structure; the current navigation and features are documented in this README.
 - `README.md` — Project overview, architecture guide, and viva summary.
 
 ## How Core Features Work
@@ -47,7 +44,7 @@ The site uses a fixed light palette, Cormorant Garamond headings, Inter body tex
 
 ## How to Add a New Exhibit
 
-Add one object to the `exhibits` array in `data.js` with no other code changes needed:
+Add one object to the `exhibits` array in `js/data.js`. The shared card, detail, recommendation, Favorites and My Visit views use this data:
 
 1. Use a unique numeric `id` (never reuse old IDs).
 2. Set `category` to one of the 8 approved subjects (`Ancient History`, `Sculpture`, `Archaeology`, `Painting`, `Medieval`, `Textiles`, `Natural History`, `Modern Art`).
@@ -64,12 +61,14 @@ Add one object to the `exhibits` array in `data.js` with no other code changes n
 ## Known Limitations
 
 - **Per-browser persistence:** Favorites, My Visit route IDs and selected interests live only in `localStorage` on one browser and device; clearing site data erases them.
-- **Fixed sample data:** The 16 exhibits are static objects stored in `data.js` rather than an admin database.
+- **Fixed sample data:** The 16 exhibits are static objects stored in `js/data.js` rather than an admin database.
 - **Schematic gallery route:** The visit route orders stops by `galleryOrder` and `stop` sequence, not physical walking distances, floor coordinates, stairs, or lift access.
 
 ## Images and Credits
 
-*To be completed when images are added.*
+The `images/` folder contains the 16 exhibit images, the Home hero image, and the site logo.
 
-Exhibit photographs and the Home hero photo are added by the team inside the `images/` folder. Each file must use lowercase words joined by hyphens matching the exhibit (for example `images/standing-bronze-figure.jpg`) as referenced by the `image` field in `data.js`, cropped to `4:3` and compressed to about `150 KB`. Photographer/archive credits will be listed here and in the shared site footer once the image files are placed in `images/`.
+New exhibit image paths must match the `image` field in `js/data.js`; use lowercase, hyphen-separated filenames and aim for a 4:3 crop where practical. Optimize images for web without treating 150 KB as a strict limit.
+
+This README does not yet list photographer, archive, or license credits for the existing images. Add verified attribution and usage terms here before redistributing the image assets.
 
