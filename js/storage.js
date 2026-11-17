@@ -1,4 +1,4 @@
-// Storage helpers for visitor favourites and interests using browser localStorage.
+// Storage helpers keep My Visit routes, Favorites, and interests in localStorage.
 // localStorage only stores text strings, so JSON.stringify converts arrays to text
 // when saving, and JSON.parse converts that text back into an array when reading.
 
@@ -13,7 +13,7 @@ const APPROVED_INTERESTS = [
   "Modern Art"
 ];
 
-// Return valid numeric exhibit IDs from localStorage, or [] if missing/corrupted.
+// Keep the existing "favourites" key for My Visit so saved routes are preserved.
 function getFavourites() {
   try {
     const raw = localStorage.getItem("favourites");
@@ -61,6 +61,57 @@ function toggleFavourite(id) {
   }
 
   saveFavourites(updated);
+  return updated;
+}
+
+// Favorites use a separate key so bookmarking never changes the visit route.
+function getFavorites() {
+  try {
+    const raw = localStorage.getItem("favorites");
+    if (!raw) {
+      return [];
+    }
+
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+
+    return parsed.filter(function (id) {
+      return typeof id === "number";
+    });
+  } catch (error) {
+    console.error("Unable to read Favorites from localStorage.", error);
+    return [];
+  }
+}
+
+function saveFavorites(favoriteIds) {
+  try {
+    localStorage.setItem("favorites", JSON.stringify(favoriteIds));
+  } catch (error) {
+    console.error("Unable to save Favorites to localStorage.", error);
+  }
+}
+
+function isFavorite(id) {
+  return getFavorites().includes(id);
+}
+
+function toggleFavorite(id) {
+  const favorites = getFavorites();
+  let updated;
+
+  if (favorites.includes(id)) {
+    updated = favorites.filter(function (itemId) {
+      return itemId !== id;
+    });
+  } else {
+    updated = favorites.slice();
+    updated.push(id);
+  }
+
+  saveFavorites(updated);
   return updated;
 }
 

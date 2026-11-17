@@ -58,48 +58,6 @@ function setupMobileNav() {
   });
 }
 
-// Toggle color theme between light and dark, persist to localStorage, and update switch state
-function setupThemeToggle() {
-  const toggleBtn = document.getElementById("theme-toggle");
-  if (!toggleBtn) {
-    return;
-  }
-
-  function getActiveTheme() {
-    return document.documentElement.getAttribute("data-theme") || "light";
-  }
-
-  function updateToggleUI(theme) {
-    const isDark = theme === "dark";
-    toggleBtn.setAttribute("role", "switch");
-    toggleBtn.setAttribute("aria-checked", String(isDark));
-    toggleBtn.setAttribute(
-      "aria-label",
-      isDark ? "Dark mode active. Switch to light theme" : "Dark mode inactive. Switch to dark theme"
-    );
-    const srText = toggleBtn.querySelector(".sr-only");
-    if (srText) {
-      srText.textContent = isDark ? "Dark mode active. Switch to light theme" : "Dark mode inactive. Switch to dark theme";
-    }
-  }
-
-  updateToggleUI(getActiveTheme());
-
-  toggleBtn.addEventListener("click", function () {
-    const currentTheme = getActiveTheme();
-    const newTheme = currentTheme === "dark" ? "light" : "dark";
-
-    document.documentElement.setAttribute("data-theme", newTheme);
-    updateToggleUI(newTheme);
-
-    try {
-      localStorage.setItem("theme", newTheme);
-    } catch (e) {
-      // Storage unavailable; DOM attribute still applies theme
-    }
-  });
-}
-
 // Fixed header scroll behaviours:
 // 1. On Home (< 40px): dark translucent tint over hero photo with cream text
 // 2. Hide on scroll down past 120px with threshold >= 6px, show on scroll up
@@ -191,56 +149,6 @@ function setupHeaderScroll() {
 // Alias for backward compatibility
 const setupStickyHeader = setupHeaderScroll;
 
-// Scroll progress bar: tracks viewport scroll progress
-function setupScrollProgress() {
-  const bar = document.getElementById("scroll-progress");
-  if (!bar) {
-    return;
-  }
-
-  function onScroll() {
-    const scrollY = window.scrollY || window.pageYOffset;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    const percent = docHeight > 0 ? (scrollY / docHeight) * 100 : 0;
-    bar.style.width = Math.min(100, Math.max(0, percent)) + "%";
-  }
-
-  window.addEventListener("scroll", onScroll, { passive: true });
-  onScroll();
-}
-
-// Back to top button: fades in after 600px scroll, smooth scrolls to top
-function setupBackToTop() {
-  const btn = document.getElementById("back-to-top");
-  if (!btn) {
-    return;
-  }
-
-  function onScroll() {
-    if (window.scrollY > 600) {
-      btn.classList.add("is-visible");
-    } else {
-      btn.classList.remove("is-visible");
-    }
-  }
-
-  window.addEventListener("scroll", onScroll, { passive: true });
-  onScroll();
-
-  btn.addEventListener("click", function () {
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    window.scrollTo({
-      top: 0,
-      behavior: prefersReduced ? "auto" : "smooth"
-    });
-
-    const brand = document.querySelector(".site-brand");
-    if (brand) {
-      brand.focus({ preventScroll: true });
-    }
-  });
-}
-
 // Scroll fade-in: reveals .reveal elements smoothly as they enter viewport
 function setupScrollReveal() {
   if (!("IntersectionObserver" in window)) {
@@ -287,98 +195,6 @@ function triggerHeroStagger() {
   });
 }
 
-// Intro loader (Home page only): plays once per session, fades out smoothly
-function setupIntroLoader() {
-  const isHomePage =
-    window.location.pathname.endsWith("index.html") ||
-    window.location.pathname === "/" ||
-    window.location.pathname.endsWith("/");
-
-  if (!isHomePage && !document.querySelector(".hero-full, .hero")) {
-    return;
-  }
-
-  try {
-    if (sessionStorage.getItem("loaderSeen")) {
-      triggerHeroStagger();
-      return;
-    }
-    sessionStorage.setItem("loaderSeen", "1");
-  } catch (e) {
-    triggerHeroStagger();
-    return;
-  }
-
-  const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  const overlay = document.createElement("div");
-  overlay.id = "intro-loader";
-  overlay.className = "intro-loader";
-  overlay.setAttribute("aria-hidden", "true");
-  overlay.innerHTML = `
-    <div class="intro-loader-content">
-      <span class="site-logo intro-loader-logo" aria-hidden="true">
-        <svg class="site-logo-icon" width="36" height="36" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M16 3L3 9V11H29V9L16 3Z" fill="currentColor"/>
-          <rect x="4" y="12" width="24" height="1.5" fill="currentColor" opacity="0.85"/>
-          <rect x="5.5" y="14.5" width="2.5" height="11" rx="0.5" fill="currentColor"/>
-          <rect x="11" y="14.5" width="2" height="11" rx="0.5" fill="currentColor"/>
-          <rect x="19" y="14.5" width="2" height="11" rx="0.5" fill="currentColor"/>
-          <rect x="24" y="14.5" width="2.5" height="11" rx="0.5" fill="currentColor"/>
-          <path d="M13 25.5V18.5C13 16.843 14.343 15.5 16 15.5C17.657 15.5 19 16.843 19 18.5V25.5H13Z" stroke="currentColor" stroke-width="1.3" fill="none"/>
-          <rect x="3.5" y="26.5" width="25" height="1.5" fill="currentColor"/>
-          <rect x="2" y="28.5" width="28" height="2" rx="0.5" fill="currentColor"/>
-        </svg>
-      </span>
-      <span class="intro-loader-title">Museum Exploration Platform</span>
-      <span class="intro-loader-subtitle">Art, Archaeology and Natural History</span>
-      <div class="intro-loader-bar">
-        <div class="intro-loader-progress"></div>
-      </div>
-    </div>
-  `;
-
-  document.body.insertBefore(overlay, document.body.firstChild);
-
-  if (!prefersReduced) {
-    requestAnimationFrame(function () {
-      const bar = overlay.querySelector(".intro-loader-progress");
-      if (bar) {
-        bar.style.width = "100%";
-      }
-    });
-  }
-
-  let isDismissed = false;
-  function dismissLoader() {
-    if (isDismissed) return;
-    isDismissed = true;
-    overlay.classList.add("is-fading-out");
-    triggerHeroStagger();
-    setTimeout(function () {
-      overlay.remove();
-    }, 500);
-  }
-
-  const duration = prefersReduced ? 600 : 1600;
-
-  let windowLoaded = document.readyState === "complete";
-  if (!windowLoaded) {
-    window.addEventListener("load", function () {
-      windowLoaded = true;
-    });
-  }
-
-  setTimeout(function () {
-    if (windowLoaded) {
-      dismissLoader();
-    } else {
-      window.addEventListener("load", dismissLoader);
-      setTimeout(dismissLoader, 2400); // 4s total maximum cap
-    }
-  }, duration);
-}
-
 function updateNavVisitCount() {
   const countSpan = document.getElementById("nav-visit-count");
   if (!countSpan || typeof getFavourites !== "function") {
@@ -389,12 +205,20 @@ function updateNavVisitCount() {
 }
 
 function buildSaveButton(exhibitId, isCompact) {
-  const saved = typeof isFavourite === "function" && isFavourite(exhibitId);
+  const saved = typeof isFavorite === "function" && isFavorite(exhibitId);
   const label = saved ? "Saved" : "Save";
   const savedClass = saved ? " is-saved" : "";
   const compactClass = isCompact ? " card-bookmark-btn" : "";
 
-  return `<button type="button" class="btn btn-secondary save-btn btn-bookmark${compactClass}${savedClass}" data-id="${exhibitId}" aria-pressed="${saved}" aria-label="${saved ? 'Remove from saved exhibits' : 'Save exhibit'}" title="${saved ? 'Saved' : 'Save'}"><svg class="bookmark-icon" width="16" height="16" viewBox="0 0 24 24" fill="${saved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg><span class="save-label${isCompact ? ' visually-hidden' : ''}">${label}</span></button>`;
+  return `<button type="button" class="btn btn-secondary save-btn btn-bookmark${compactClass}${savedClass}" data-id="${exhibitId}" aria-pressed="${saved}" aria-label="${saved ? 'Remove from Favorites' : 'Add to Favorites'}" title="${saved ? 'Saved' : 'Save'}"><svg class="bookmark-icon" width="16" height="16" viewBox="0 0 24 24" fill="${saved ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg><span class="save-label${isCompact ? ' visually-hidden' : ''}">${label}</span></button>`;
+}
+
+function buildVisitButton(exhibitId) {
+  const inVisit = typeof isFavourite === "function" && isFavourite(exhibitId);
+  const label = inVisit ? "In My Visit" : "Add to My Visit";
+  const visitClass = inVisit ? " is-in-visit" : "";
+
+  return `<button type="button" class="btn btn-secondary visit-add-btn${visitClass}" data-id="${exhibitId}" aria-pressed="${inVisit}" aria-label="${inVisit ? 'Remove from My Visit' : 'Add to My Visit'}">${label}</button>`;
 }
 
 // One click listener on document handles every Save button, including cards re-rendered by filters.
@@ -405,7 +229,7 @@ function setupSaveButtons() {
       return;
     }
 
-    if (typeof toggleFavourite !== "function" || typeof isFavourite !== "function") {
+    if (typeof toggleFavorite !== "function" || typeof isFavorite !== "function") {
       return;
     }
 
@@ -414,13 +238,13 @@ function setupSaveButtons() {
       return;
     }
 
-    toggleFavourite(exhibitId);
-    const savedNow = isFavourite(exhibitId);
+    toggleFavorite(exhibitId);
+    const savedNow = isFavorite(exhibitId);
 
     const matchingButtons = document.querySelectorAll('.save-btn[data-id="' + exhibitId + '"]');
     matchingButtons.forEach(function (button) {
       button.setAttribute("aria-pressed", String(savedNow));
-      button.setAttribute("aria-label", savedNow ? "Remove from saved exhibits" : "Save exhibit");
+      button.setAttribute("aria-label", savedNow ? "Remove from Favorites" : "Add to Favorites");
       button.setAttribute("title", savedNow ? "Saved" : "Save");
       button.classList.toggle("is-saved", savedNow);
 
@@ -433,6 +257,33 @@ function setupSaveButtons() {
       if (iconEl) {
         iconEl.setAttribute("fill", savedNow ? "currentColor" : "none");
       }
+    });
+
+    renderFavoritesGrid();
+  });
+}
+
+function setupVisitButtons() {
+  document.addEventListener("click", function (event) {
+    const btn = event.target.closest ? event.target.closest(".visit-add-btn") : (event.target.classList && event.target.classList.contains("visit-add-btn") ? event.target : null);
+    if (!btn || typeof toggleFavourite !== "function" || typeof isFavourite !== "function") {
+      return;
+    }
+
+    const exhibitId = Number(btn.getAttribute("data-id"));
+    if (!exhibitId) {
+      return;
+    }
+
+    toggleFavourite(exhibitId);
+    const inVisit = isFavourite(exhibitId);
+    const matchingButtons = document.querySelectorAll('.visit-add-btn[data-id="' + exhibitId + '"]');
+
+    matchingButtons.forEach(function (button) {
+      button.setAttribute("aria-pressed", String(inVisit));
+      button.setAttribute("aria-label", inVisit ? "Remove from My Visit" : "Add to My Visit");
+      button.classList.toggle("is-in-visit", inVisit);
+      button.textContent = inVisit ? "In My Visit" : "Add to My Visit";
     });
 
     updateNavVisitCount();
@@ -456,7 +307,7 @@ function buildExhibitCard(exhibit, headingTag, matchedText) {
 
       recommendationContextHtml = `
         <div class="exhibit-recommendation-context">
-          <div class="matched-chips" aria-label="Matched categories">
+          <div class="matched-chips" aria-label="Matched interests">
             ${chipsHtml}
           </div>
         </div>
@@ -509,34 +360,11 @@ function buildExhibitCard(exhibit, headingTag, matchedText) {
             <span class="arrow" aria-hidden="true">&rarr;</span>
           </a>
         </div>
+        <div class="exhibit-card-visit-action">
+          ${buildVisitButton(exhibit.id)}
+        </div>
       </div>
     </article>
-  `;
-}
-
-// Render the single featured exhibit highlight on the Home page
-function renderHomeFeatured() {
-  const container = document.getElementById("home-featured");
-
-  if (!container || typeof exhibits === "undefined" || exhibits.length === 0) {
-    return;
-  }
-
-  const exhibit = exhibits[0];
-  const match = exhibit.description.match(/^[^.]+\./);
-  const firstSentence = match ? match[0] : exhibit.description;
-
-  container.innerHTML = `
-    <div class="featured-media">
-      <img src="${exhibit.image}" alt="${exhibit.name}" loading="lazy">
-    </div>
-    <div class="featured-text">
-      <p class="label">${exhibit.category}</p>
-      <h3 class="featured-title">${exhibit.name}</h3>
-      <p class="featured-period">${exhibit.period}</p>
-      <p class="featured-desc">${firstSentence}</p>
-      <a href="exhibit.html?id=${exhibit.id}" class="text-link">View exhibit details</a>
-    </div>
   `;
 }
 
@@ -579,90 +407,6 @@ function renderHomeStats() {
   `;
 }
 
-// Render the 4 museum gallery tiles on the Home page matching the approved exhibition guide
-function renderHomeGalleries() {
-  const container = document.getElementById("home-galleries");
-  if (!container || typeof exhibits === "undefined" || exhibits.length === 0) {
-    return;
-  }
-
-  // Curated room descriptions matching the exhibition catalogue
-  const galleryDescriptions = {
-    1: "Sculptures, artefacts and daily life from early civilizations.",
-    2: "Manuscripts, textiles and artistic traditions of the medieval era.",
-    3: "Fossils, specimens and the story of life on Earth.",
-    4: "Paintings, movements and expressions from classical to modern."
-  };
-
-  // Group exhibits by galleryOrder using simple plain loops
-  const galleryGroups = {};
-  for (let i = 0; i < exhibits.length; i++) {
-    const item = exhibits[i];
-    const order = item.galleryOrder;
-    if (!galleryGroups[order]) {
-      galleryGroups[order] = {
-        name: item.gallery,
-        order: order,
-        firstImage: item.image,
-        count: 0,
-        totalMinutes: 0
-      };
-    }
-    galleryGroups[order].count += 1;
-    galleryGroups[order].totalMinutes += item.visitTime;
-  }
-
-  const orders = Object.keys(galleryGroups).sort(function (a, b) {
-    return Number(a) - Number(b);
-  });
-  let html = "";
-
-  for (let i = 0; i < orders.length; i++) {
-    const g = galleryGroups[orders[i]];
-    const desc = galleryDescriptions[g.order] || "Curated works and historical treasures.";
-    const roomNum = String(g.order).padStart(2, "0");
-
-    html += `
-      <a href="explore.html" class="gallery-card">
-        <div class="gallery-card-media">
-          <span class="gallery-room-badge">Room ${roomNum}</span>
-          <img src="${g.firstImage}" alt="${g.name}" loading="lazy">
-          <div class="gallery-card-scrim" aria-hidden="true"></div>
-        </div>
-        <div class="gallery-card-body">
-          <h3 class="gallery-card-title">${g.name}</h3>
-          <p class="gallery-card-desc">${desc}</p>
-          <div class="gallery-card-footer">
-            <div class="gallery-card-meta">
-              <span class="meta-item">
-                <svg class="meta-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
-                  <polyline points="2 17 12 22 22 17"></polyline>
-                  <polyline points="2 12 12 17 22 12"></polyline>
-                </svg>
-                <span>${g.count} Exhibits</span>
-              </span>
-              <span class="meta-divider" aria-hidden="true">|</span>
-              <span class="meta-item">
-                <svg class="meta-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <polyline points="12 6 12 12 16 14"></polyline>
-                </svg>
-                <span>${g.totalMinutes} Min</span>
-              </span>
-            </div>
-            <div class="gallery-card-btn" aria-hidden="true">
-              <span class="arrow">&rarr;</span>
-            </div>
-          </div>
-        </div>
-      </a>
-    `;
-  }
-
-  container.innerHTML = html;
-}
-
 // Render the 8 approved interests on the Home page with dynamic exhibit counts and descriptions
 function renderHomeInterests() {
   const container = document.getElementById("home-interests");
@@ -699,7 +443,7 @@ function renderHomeInterests() {
     const desc = interestDescriptions[interest] || "Curated collection highlights and related exhibits.";
 
     html += `
-      <a href="discover.html" class="interest-cell">
+      <a href="explore.html#discover" class="interest-cell">
         <span class="interest-num">${num}</span>
         <h3 class="interest-title">${interest}</h3>
         <p class="interest-desc">${desc}</p>
@@ -756,6 +500,40 @@ function renderExploreGrid(list) {
   }
 
   exploreGrid.innerHTML = html;
+}
+
+function renderFavoritesGrid() {
+  const favoritesGrid = document.getElementById("favorites-grid");
+  const emptyState = document.getElementById("favorites-empty");
+
+  if (!favoritesGrid || typeof exhibits === "undefined" || typeof getFavorites !== "function") {
+    return;
+  }
+
+  const favoriteIds = getFavorites();
+  const favoriteExhibits = exhibits.filter(function (exhibit) {
+    return favoriteIds.includes(exhibit.id);
+  });
+
+  if (favoriteExhibits.length === 0) {
+    favoritesGrid.innerHTML = "";
+    favoritesGrid.hidden = true;
+    if (emptyState) {
+      emptyState.hidden = false;
+    }
+    return;
+  }
+
+  let html = "";
+  for (let i = 0; i < favoriteExhibits.length; i++) {
+    html += buildExhibitCard(favoriteExhibits[i], "h2");
+  }
+
+  favoritesGrid.innerHTML = html;
+  favoritesGrid.hidden = false;
+  if (emptyState) {
+    emptyState.hidden = true;
+  }
 }
 
 function setupCategoryFilters() {
@@ -860,6 +638,7 @@ function renderExhibitDetail() {
 
       <div class="exhibit-detail-actions" id="exhibit-detail-actions">
         ${buildSaveButton(exhibit.id)}
+        ${buildVisitButton(exhibit.id)}
       </div>
 
       <p class="exhibit-detail-description">${exhibit.description}</p>
@@ -904,9 +683,8 @@ function renderInterestChips() {
   chipsContainer.innerHTML = html;
 }
 
-// Recommendation rule: start score at 0, add +2 if the exhibit's category matches
-// a selected interest and +1 for each matching tag. Keep exhibits with score > 0
-// and sort highest score first, breaking ties by exhibit id ascending.
+// Score each exhibit by the number of selected interests it matches.
+// Ties stay in a consistent catalogue order by exhibit id.
 function getRecommendations(selectedInterests) {
   if (!Array.isArray(selectedInterests) || selectedInterests.length === 0) {
     return [];
@@ -916,24 +694,22 @@ function getRecommendations(selectedInterests) {
 
   for (let i = 0; i < exhibits.length; i++) {
     const exhibit = exhibits[i];
-    let score = 0;
     const matched = [];
 
     if (selectedInterests.includes(exhibit.category)) {
-      score += 2;
       matched.push(exhibit.category);
     }
 
     for (let j = 0; j < exhibit.tags.length; j++) {
       const tag = exhibit.tags[j];
       if (selectedInterests.includes(tag)) {
-        score += 1;
         if (!matched.includes(tag)) {
           matched.push(tag);
         }
       }
     }
 
+    const score = matched.length;
     if (score > 0) {
       scored.push({
         exhibit: exhibit,
@@ -953,51 +729,44 @@ function getRecommendations(selectedInterests) {
   return scored;
 }
 
-function renderRecommendations() {
+function renderRecommendations(showResults) {
   const resultsGrid = document.getElementById("results");
   const summaryEl = document.getElementById("results-summary");
-  const emptyEl = document.getElementById("discover-empty");
-  const emptyTitle = document.getElementById("discover-empty-title");
-  const emptyText = document.getElementById("discover-empty-text");
+  const messageEl = document.getElementById("recommendations-message");
 
-  if (!resultsGrid || typeof exhibits === "undefined" || typeof getInterests !== "function") {
+  if (!resultsGrid || !messageEl || typeof exhibits === "undefined" || typeof getInterests !== "function") {
     return;
   }
 
   const selectedInterests = getInterests();
+  resultsGrid.innerHTML = "";
+  if (summaryEl) {
+    summaryEl.textContent = "";
+    summaryEl.hidden = true;
+  }
 
   if (selectedInterests.length === 0) {
-    resultsGrid.innerHTML = "";
-    if (summaryEl) {
-      summaryEl.hidden = true;
-      summaryEl.textContent = "";
-    }
-    if (emptyEl) {
-      emptyEl.hidden = true;
-      emptyEl.style.display = "none";
-    }
+    messageEl.textContent = "Select one or more interests, then choose Find Recommendations.";
+    return;
+  }
+
+  if (!showResults) {
+    messageEl.textContent = "Your interests are selected. Choose Find Recommendations to see matching exhibits.";
     return;
   }
 
   const recommendations = getRecommendations(selectedInterests);
 
   if (recommendations.length === 0) {
-    resultsGrid.innerHTML = '<p class="muted-text discover-no-matches">No exhibits matched those interests. Try selecting another interest above, or browse all exhibits in Explore.</p>';
+    messageEl.textContent = "No exhibits matched those interests. Try different interests or reset your selection.";
     if (summaryEl) {
       summaryEl.hidden = false;
       summaryEl.textContent = "Showing 0 matching exhibits.";
     }
-    if (emptyEl) {
-      emptyEl.hidden = true;
-      emptyEl.style.display = "none";
-    }
     return;
   }
 
-  if (emptyEl) {
-    emptyEl.hidden = true;
-    emptyEl.style.display = "none";
-  }
+  messageEl.textContent = "";
   if (summaryEl) {
     summaryEl.hidden = false;
     const word = recommendations.length === 1 ? "exhibit" : "exhibits";
@@ -1015,26 +784,40 @@ function renderRecommendations() {
 
 function setupInterestChips() {
   const chipsContainer = document.getElementById("interest-chips");
-  if (!chipsContainer || typeof toggleInterest !== "function") {
-    return;
+  if (chipsContainer && typeof toggleInterest === "function") {
+    chipsContainer.addEventListener("click", function (event) {
+      if (!event.target.classList || !event.target.classList.contains("chip")) {
+        return;
+      }
+
+      const interest = event.target.getAttribute("data-interest");
+      if (!interest) {
+        return;
+      }
+
+      const updated = toggleInterest(interest);
+      const isSelected = updated.includes(interest);
+      event.target.classList.toggle("is-selected", isSelected);
+      event.target.setAttribute("aria-pressed", String(isSelected));
+      renderRecommendations(false);
+    });
   }
 
-  chipsContainer.addEventListener("click", function (event) {
-    if (!event.target.classList || !event.target.classList.contains("chip")) {
-      return;
-    }
+  const findButton = document.getElementById("find-recommendations");
+  if (findButton) {
+    findButton.addEventListener("click", function () {
+      renderRecommendations(true);
+    });
+  }
 
-    const interest = event.target.getAttribute("data-interest");
-    if (!interest) {
-      return;
-    }
-
-    const updated = toggleInterest(interest);
-    const isSelected = updated.includes(interest);
-    event.target.classList.toggle("is-selected", isSelected);
-    event.target.setAttribute("aria-pressed", String(isSelected));
-    renderRecommendations();
-  });
+  const resetButton = document.getElementById("reset-interests");
+  if (resetButton && chipsContainer && typeof saveInterests === "function") {
+    resetButton.addEventListener("click", function () {
+      saveInterests([]);
+      renderInterestChips();
+      renderRecommendations(false);
+    });
+  }
 }
 
 // Build the visitor's route by looking up saved exhibits and sorting a copy
@@ -1288,27 +1071,21 @@ window.addEventListener("pageshow", function (event) {
 
 document.addEventListener("DOMContentLoaded", function () {
   setupImageFallback();
-  setupIntroLoader();
-  if (!document.getElementById("intro-loader")) {
-    triggerHeroStagger();
-  }
-  setupScrollProgress();
-  setupBackToTop();
+  triggerHeroStagger();
   setupMobileNav();
-  setupThemeToggle();
   setupStickyHeader();
   updateNavVisitCount();
   setupSaveButtons();
-  renderHomeFeatured();
-  renderHomeGalleries();
+  setupVisitButtons();
   renderHomeInterests();
   renderHomeStats();
   renderFeaturedExhibits();
   renderExploreGrid();
+  renderFavoritesGrid();
   setupCategoryFilters();
   renderExhibitDetail();
   renderInterestChips();
-  renderRecommendations();
+  renderRecommendations(false);
   setupInterestChips();
   renderVisitRoute();
   setupVisitRemove();
