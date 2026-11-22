@@ -20,8 +20,9 @@ function setupMobileNav() {
   function closeNav() {
     if (nav.classList.contains("is-open")) {
       nav.classList.remove("is-open");
+      toggleBtn.classList.remove("is-open");
       toggleBtn.setAttribute("aria-expanded", "false");
-      toggleBtn.textContent = "Menu";
+      toggleBtn.setAttribute("aria-label", "Open menu");
       if (header) {
         header.classList.remove("has-nav-open");
       }
@@ -30,8 +31,9 @@ function setupMobileNav() {
 
   toggleBtn.addEventListener("click", function () {
     const isOpen = nav.classList.toggle("is-open");
+    toggleBtn.classList.toggle("is-open", isOpen);
     toggleBtn.setAttribute("aria-expanded", String(isOpen));
-    toggleBtn.textContent = isOpen ? "Close" : "Menu";
+    toggleBtn.setAttribute("aria-label", isOpen ? "Close menu":"Open menu");
     if (header) {
       if (isOpen) {
         header.classList.add("has-nav-open");
